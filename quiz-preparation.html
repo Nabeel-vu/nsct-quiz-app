@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NSCT Quiz Preparation - Study Guide</title>
+    <link rel="stylesheet" href="preparation-style.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <h1>📚 NSCT Quiz Preparation</h1>
+            <p class="subtitle">Complete Question Bank with Answers & Explanations</p>
+        </div>
+        <button id="back-to-home" class="btn-back">← Back to Quiz</button>
+    </header>
+
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-active">
+        <div class="loading-spinner"></div>
+        <p>Loading question bank...</p>
+    </div>
+
+    <!-- Filter & Stats -->
+    <div id="filter-section" class="filter-section" style="display: none;">
+        <div class="container">
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <span class="stat-label">Total Questions:</span>
+                    <span id="total-questions" class="stat-value">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Categories:</span>
+                    <span id="total-categories" class="stat-value">0</span>
+                </div>
+            </div>
+
+            <div class="filter-controls">
+                <input type="text" id="search-input" placeholder="🔍 Search questions..." class="search-input">
+                <select id="category-filter" class="category-select">
+                    <option value="all">All Categories</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Questions Container -->
+    <div id="questions-container" class="questions-container" style="display: none;">
+        <!-- Questions will be inserted here dynamically -->
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>© 2026 NSCT Preparation Quiz - Study hard, succeed! 🎓</p>
+        </div>
+    </footer>
+
+    <script src="preparation-script.js"></script>
+</body>
+
+</html>
