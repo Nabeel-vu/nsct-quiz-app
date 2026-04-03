@@ -1,18 +1,35 @@
 # NSCT Preparation Quiz
 
-An interactive quiz application for NSCT preparation with sound effects on option selection.
+An interactive quiz application for NSCT preparation with **2768 real questions** and sound effects on option selection.
 
 ## Features
 
-- ✅ 20 sample questions across multiple categories
+- ✅ **2768 authentic NSCT questions** across 10 categories
+- ✅ **Weighted question selection** - 100 questions per quiz based on category weights
 - ✅ 120-minute timer with visual warnings
-- ✅ **Random sound effects on option selection** (NEW!)
+- ✅ **Random sound effects on option selection** 🔊
 - ✅ Question navigation with status indicators
 - ✅ Progress tracking and auto-save
-- ✅ Detailed results with category-wise scores
+- ✅ Detailed results with explanations
+- ✅ Category-wise score breakdown
 - ✅ Quiz history with localStorage
 - ✅ Responsive design for mobile and desktop
 - ✅ Print/PDF export functionality
+
+## Question Categories
+
+1. **Computer Networks and Cloud Computing** (362 questions, weight: 10)
+2. **Programming** (254 questions, weight: 10)
+3. **Data Structures And Algorithms** (219 questions, weight: 10)
+4. **Operating Systems** (220 questions, weight: 5)
+5. **Software Engineering** (260 questions, weight: 10)
+6. **Web Development** (260 questions, weight: 10)
+7. **AI Machine Learning and Data Analytics** (454 questions, weight: 10)
+8. **Cyber Security** (182 questions, weight: 5)
+9. **Databases** (222 questions, weight: 10)
+10. **Problem Solving And Analytical Skills** (335 questions, weight: 20)
+
+**Total: 2768 questions** - Each quiz randomly selects 100 questions based on category weights.
 
 ## Sound Feature
 
@@ -25,6 +42,7 @@ nsct/
 ├── index.html          # Main HTML file
 ├── style.css           # Styling and responsive design
 ├── script.js           # Quiz logic with sound manager
+├── questions.json      # 2768 NSCT questions with explanations
 ├── sounds/             # Folder containing sound effects
 │   ├── sound2.mp3
 │   └── sound3.mp3
@@ -70,16 +88,38 @@ cd nsct
 
 ### Adding More Questions
 
-Edit the `sampleQuestions` array in `script.js`:
+Questions are loaded from `questions.json`. The format is:
+
+```json
+{
+  "Category Name": {
+    "weight": 10,
+    "questions": [
+      {
+        "statement": "Question text?",
+        "option_a": "Option A",
+        "option_b": "Option B",
+        "option_c": "Option C",
+        "option_d": "Option D",
+        "correct_option": "option_a",
+        "explanation": "Explanation text"
+      }
+    ]
+  }
+}
+```
+
+### Changing Quiz Settings
+
+Edit `QUIZ_CONFIG` in `script.js`:
 
 ```javascript
-{
-    id: 21,
-    question: "Your question here?",
-    options: ["Option A", "Option B", "Option C", "Option D"],
-    correct: 0, // Index of correct answer (0-3)
-    category: "Category Name"
-}
+const QUIZ_CONFIG = {
+    totalQuestions: 100,  // Number of questions per quiz
+    timeLimit: 120 * 60,  // Time in seconds (120 minutes)
+    storageKey: 'nsct_quiz_history',
+    quizProgressKey: 'nsct_quiz_progress'
+};
 ```
 
 ### Adding More Sounds
