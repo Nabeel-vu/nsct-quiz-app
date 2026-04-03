@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NSCT Preparation Quiz</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <base target="_blank">
+</head>
+
+<body>
+    <!-- Landing Page -->
+    <div id="landing-page" class="page active">
+        <div class="container">
+            <div class="landing-content">
+                <h1>NSCT Preparation Quiz</h1>
+                <p class="subtitle">Practice with 100 weighted questions across 10 categories</p>
+                <div class="input-group">
+                    <label for="student-name">Enter Your Name</label>
+                    <input type="text" id="student-name" placeholder="Your Name" autocomplete="name">
+                </div>
+                <button id="start-btn" class="btn-primary">Start Quiz</button>
+                <button id="view-history-btn" class="btn-secondary">View History</button>
+                <button id="category-test-btn" class="btn-category"
+                    onclick="window.location.href='https://nsct-prep-2026-cat.netlify.app'">
+                    Category Wise Test
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz Page -->
+    <div id="quiz-page" class="page">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="timer-container">
+                <span class="timer-label">Time Remaining:</span>
+                <span id="timer" class="timer">120:00</span>
+            </div>
+            <div class="progress-info">
+                <span id="answered-count">0/100 Answered</span>
+            </div>
+            <button id="submit-quiz-btn" class="btn-submit-top">Submit</button>
+        </div>
+
+        <!-- Question Index -->
+        <div class="question-index-container">
+            <div id="question-index" class="question-index">
+                <!-- Generated dynamically -->
+            </div>
+        </div>
+
+        <!-- Question Container -->
+        <div class="quiz-container">
+            <div id="question-container" class="question-card">
+                <div class="question-header">
+                    <span id="question-number" class="question-number">Question 1</span>
+                    <span id="question-category" class="question-category">Category</span>
+                </div>
+                <h2 id="question-text" class="question-text">Question text goes here</h2>
+                <div id="options-container" class="options-container">
+                    <!-- Options generated dynamically -->
+                </div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="navigation-buttons">
+                <button id="prev-btn" class="btn-nav" disabled>← Back</button>
+                <button id="next-btn" class="btn-nav">Next →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Result Page -->
+    <div id="result-page" class="page">
+        <div class="container">
+            <div class="result-content">
+                <h1>Quiz Results</h1>
+                <div id="student-result-name" class="student-name-display"></div>
+
+                <div class="score-overview">
+                    <div class="total-score-card">
+                        <span class="score-label">Total Score</span>
+                        <span id="total-score" class="score-value">0/100</span>
+                        <span id="percentage" class="percentage">0%</span>
+                    </div>
+                </div>
+
+                <div class="category-scores-section">
+                    <h2>Category-wise Scores</h2>
+                    <div id="category-scores" class="category-scores-grid">
+                        <!-- Generated dynamically -->
+                    </div>
+                </div>
+
+                <div class="detailed-results-section">
+                    <h2>Detailed Review</h2>
+                    <div id="detailed-questions" class="detailed-questions">
+                        <!-- Generated dynamically -->
+                    </div>
+                </div>
+
+                <div class="result-actions">
+                    <button id="download-pdf-btn" class="btn-secondary">Download PDF</button>
+                    <button id="new-quiz-btn" class="btn-primary">Start New Quiz</button>
+                    <button id="view-history-result-btn" class="btn-secondary">View History</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- History Page -->
+    <div id="history-page" class="page">
+        <div class="container">
+            <div class="history-content">
+                <h1>Quiz History</h1>
+                <div id="history-list" class="history-list">
+                    <!-- Generated dynamically -->
+                </div>
+                <button id="back-to-home-btn" class="btn-primary">Back to Home</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirm-modal" class="modal">
+        <div class="modal-content">
+            <h3>Submit Quiz?</h3>
+            <p id="modal-message">Are you sure you want to submit?</p>
+            <div class="modal-buttons">
+                <button id="cancel-submit" class="btn-secondary">Cancel</button>
+                <button id="confirm-submit" class="btn-primary">Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
