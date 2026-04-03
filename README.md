@@ -1,13 +1,15 @@
 # NSCT Preparation Quiz
 
-An interactive quiz application for NSCT preparation with **2768 real questions** and sound effects on option selection.
+An interactive quiz application for NSCT preparation with **2768 real questions** and **dynamic sound effects** on option selection.
 
 ## Features
 
 - ✅ **2768 authentic NSCT questions** across 10 categories
 - ✅ **Weighted question selection** - 100 questions per quiz based on category weights
 - ✅ 120-minute timer with visual warnings
-- ✅ **Random sound effects on option selection** 🔊
+- ✅ **Dynamic sound system** 🔊 - Plays ANY MP3 file you add (no hardcoded names!)
+- ✅ **8 different sound scenarios** with grade-based results
+- ✅ **< 10ms playback latency** with pre-loading
 - ✅ Question navigation with status indicators
 - ✅ Progress tracking and auto-save
 - ✅ Detailed results with explanations
@@ -153,24 +155,40 @@ const QUIZ_CONFIG = {
 
 ### Adding More Sounds
 
-Place sound files in appropriate directories under `sounds/`. See [SOUND_GUIDE.md](SOUND_GUIDE.md) for:
-- Directory structure and purpose
-- File format recommendations
-- Optimal file sizes and durations
-- Volume control
-- Free sound resources
+**It's super easy!** Just place MP3 files in the directories and update the config:
 
-**Quick Example:**
-```bash
-# Add option selection sounds
-sounds/option-select/select3.mp3
-sounds/option-select/select4.mp3
+1. **Add your MP3 file** to any sound directory (any filename works!)
+   ```bash
+   sounds/option-select/my-cool-sound.mp3
+   sounds/grade-excellent/celebration.mp3
+   ```
 
-# Add custom grade sounds
-sounds/grade-excellent/celebration.mp3
-```
+2. **Update the config** at the top of `script.js`:
+   ```javascript
+   const SOUND_FILES = {
+       optionSelect: [
+           'error_CDOxCYm.mp3',
+           'faahhhhhhh.mp3',
+           'gey-echo.mp3',
+           'my-cool-sound.mp3'  // Just add your filename here!
+       ],
+       gradeExcellent: [
+           'excellent.mp3',
+           'celebration.mp3'     // Add any name you want!
+       ],
+       // ... etc
+   };
+   ```
 
-The system automatically detects and uses all MP3 files in each directory.
+3. **That's it!** The system automatically:
+   - Builds the full path for you
+   - Pre-loads the sound
+   - Randomly selects from available sounds
+   - Handles errors gracefully if a file is missing
+
+**No hardcoded names needed!** Name your files anything you want, just update the config.
+
+See [SOUND_GUIDE.md](SOUND_GUIDE.md) for detailed documentation and [SOUND_QUICK_REF.md](SOUND_QUICK_REF.md) for quick reference.
 
 ## License
 

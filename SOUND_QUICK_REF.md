@@ -1,74 +1,229 @@
-# Quick Reference: Sound File Locations
+# Quick Reference: Adding Sound Files
 
-## 🎯 Where to Place Your Sound Files
+## 🎯 How to Add Your Sound Files (ANY NAME!)
 
-Copy this guide when adding sounds to your app!
+### Step 1: Place Your MP3 File
+Drop your MP3 file into the appropriate directory. **Use ANY filename you want!**
+
+### Step 2: Update the Config
+Edit `script.js` and find the `SOUND_FILES` configuration at the top (around line 11):
+
+```javascript
+const SOUND_FILES = {
+    optionSelect: [
+        'error_CDOxCYm.mp3',
+        'your-new-sound.mp3'  // ← Add your filename here!
+    ],
+    // ... other scenarios
+};
+```
+
+### Step 3: Done! 🎉
+The system automatically:
+- ✅ Builds the full path
+- ✅ Pre-loads the audio
+- ✅ Randomly selects from your sounds
+- ✅ Handles missing files gracefully
+
+## 📁 Directory Mapping
 
 ### 1. Option Selection Sounds (Click Feedback)
-**Location:** `sounds/option-select/`
-**Files:** `select1.mp3`, `select2.mp3`, `select3.mp3`, etc.
-**Recommended:** Short click/pop sounds (0.1-0.5 seconds)
-**Examples:** Click, beep, tap, button press
+**Directory:** `sounds/option-select/`
+**Config Key:** `optionSelect`
+**Current files:** error_CDOxCYm.mp3, faahhhhhhh.mp3, gey-echo.mp3
+
+```javascript
+optionSelect: [
+    'error_CDOxCYm.mp3',
+    'faahhhhhhh.mp3',
+    'gey-echo.mp3',
+    'any-name-you-want.mp3'  // Add more!
+],
+```
 
 ### 2. Submit Button Sound
-**Location:** `sounds/submit-click/`
-**File:** `submit.mp3`
-**Recommended:** Confirmation sound (0.2-0.8 seconds)
-**Examples:** Whoosh, send, confirm
+**Directory:** `sounds/submit-click/`
+**Config Key:** `submitClick`
+
+```javascript
+submitClick: [
+    'submit.mp3',
+    'send-whoosh.mp3'  // Add alternatives
+],
+```
 
 ### 3. Alert/Modal Popup Sound
-**Location:** `sounds/alert-popup/`
-**File:** `popup.mp3`
-**Recommended:** Attention-grabbing sound (0.3-1.0 seconds)
-**Examples:** Bell, notification, ping
+**Directory:** `sounds/alert-popup/`
+**Config Key:** `alertPopup`
+
+```javascript
+alertPopup: [
+    'popup.mp3',
+    'notification-bell.mp3'
+],
+```
 
 ### 4. Loading/Calculating Results Sound
-**Location:** `sounds/loading-results/`
-**File:** `loading.mp3`
-**Recommended:** Ambient/processing sound (2-4 seconds)
-**Examples:** Processing, computing, analyzing
+**Directory:** `sounds/loading-results/`
+**Config Key:** `loadingResults`
 
-### 5. Result Grade Sounds
+```javascript
+loadingResults: [
+    'loading.mp3',
+    'processing-beep.mp3'
+],
+```
+
+### 5. Grade Sounds
 
 #### 🏆 Excellent (95-100%)
-**Location:** `sounds/grade-excellent/`
-**File:** `excellent.mp3`
-**Examples:** Applause, fanfare, celebration, victory
+**Directory:** `sounds/grade-excellent/`
+**Config Key:** `gradeExcellent`
+
+```javascript
+gradeExcellent: [
+    'excellent.mp3',
+    'applause.mp3',
+    'victory-fanfare.mp3'
+],
+```
 
 #### 🎉 Very Good (80-95%)
-**Location:** `sounds/grade-verygood/`
-**File:** `verygood.mp3`
-**Examples:** Success chime, achievement, tada
+**Directory:** `sounds/grade-verygood/`
+**Config Key:** `gradeVeryGood`
+
+```javascript
+gradeVeryGood: [
+    'verygood.mp3',
+    'success-chime.mp3'
+],
+```
 
 #### 👍 Good (60-80%)
-**Location:** `sounds/grade-good/`
-**File:** `good.mp3`
-**Examples:** Positive ding, well done, nice
+**Directory:** `sounds/grade-good/`
+**Config Key:** `gradeGood`
+
+```javascript
+gradeGood: [
+    'good.mp3',
+    'well-done.mp3'
+],
+```
 
 #### 📊 Average (45-60%)
-**Location:** `sounds/grade-average/`
-**File:** `average.mp3`
-**Examples:** Neutral tone, okay, moderate
+**Directory:** `sounds/grade-average/`
+**Config Key:** `gradeAverage`
+
+```javascript
+gradeAverage: [
+    'average.mp3',
+    'okay-sound.mp3'
+],
+```
 
 #### 📉 Below Average (30-45%)
-**Location:** `sounds/grade-belowaverage/`
-**File:** `belowavg.mp3`
-**Examples:** Encouraging tone, try again, practice more
+**Directory:** `sounds/grade-belowaverage/`
+**Config Key:** `gradeBelowAverage`
+
+```javascript
+gradeBelowAverage: [
+    'belowavg.mp3',
+    'try-again.mp3'
+],
+```
 
 #### ⚠️ Poor (20-30%)
-**Location:** `sounds/grade-poor/`
-**File:** `poor.mp3`
-**Examples:** Sympathetic tone, oh no (gentle), needs work
+**Directory:** `sounds/grade-poor/`
+**Config Key:** `gradePoor`
+
+```javascript
+gradePoor: [
+    'poor.mp3',
+    'oh-no-gentle.mp3'
+],
+```
 
 #### 😟 Very Poor (5-20%)
-**Location:** `sounds/grade-verypoor/`
-**File:** `verypoor.mp3`
-**Examples:** Disappointed (not harsh), oh dear, study more
+**Directory:** `sounds/grade-verypoor/`
+**Config Key:** `gradeVeryPoor`
+
+```javascript
+gradeVeryPoor: [
+    'verypoor.mp3',
+    'disappointed.mp3'
+],
+```
 
 #### ❌ Fail (< 5%)
-**Location:** `sounds/grade-fail/`
-**File:** `fail.mp3`
-**Examples:** Sad trombone, game over, oops
+**Directory:** `sounds/grade-fail/`
+**Config Key:** `gradeFail`
+
+```javascript
+gradeFail: [
+    'fail.mp3',
+    'sad-trombone.mp3',
+    'game-over.mp3'
+],
+```
+
+## 🎯 Complete Example
+
+Let's say you want to add 3 new option click sounds:
+
+1. **Place files:**
+   ```
+   sounds/option-select/click1.mp3
+   sounds/option-select/pop-sound.mp3
+   sounds/option-select/beep-123.mp3
+   ```
+
+2. **Update script.js:**
+   ```javascript
+   const SOUND_FILES = {
+       optionSelect: [
+           'error_CDOxCYm.mp3',
+           'faahhhhhhh.mp3',
+           'gey-echo.mp3',
+           'click1.mp3',           // ← New!
+           'pop-sound.mp3',        // ← New!
+           'beep-123.mp3'          // ← New!
+       ],
+       // ... rest of config
+   };
+   ```
+
+3. **Done!** Your sounds will randomly play when clicking options.
+
+## 💡 Pro Tips
+
+### Multiple Sounds for Variety
+Add multiple files to any category for random selection:
+```javascript
+optionSelect: [
+    'sound1.mp3',
+    'sound2.mp3',
+    'sound3.mp3',
+    'sound4.mp3'  // System picks randomly!
+],
+```
+
+### Fallback Sounds
+If a sound file is missing, the system logs an error but continues working.
+
+### Testing New Sounds
+After adding sounds:
+1. Refresh the browser
+2. Open Console (F12)
+3. Look for "Sound Manager initialized" message
+4. Test the scenario that uses your sound
+
+### File Naming
+Use descriptive names for easy management:
+- ✅ `option-click-soft.mp3`
+- ✅ `celebration-applause.mp3`
+- ✅ `fail-trombone.mp3`
+- ❌ `sound1.mp3` (not descriptive)
+- ❌ `asdf.mp3` (confusing)
 
 ## 🎼 Free Sound Resources
 

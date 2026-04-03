@@ -64,26 +64,109 @@ function selectWeightedQuestions(categoryData, totalQuestions) {
     return selectedQuestions.sort(() => Math.random() - 0.5);
 }
 
+// ====================================================================
+// SOUND FILE CONFIGURATION - Add your MP3 files here!
+// ====================================================================
+// Simply add the filename of any MP3 file you place in each directory.
+// The system will automatically use them. No need for specific names!
+// ====================================================================
+
+const SOUND_FILES = {
+    // Option Selection - Randomly plays one of these when clicking options
+    // Add as many as you want for variety!
+    optionSelect: [
+        'error_CDOxCYm.mp3',
+        'faahhhhhhh.mp3',
+        'gey-echo.mp3'
+        // Add more files here: 'your-sound.mp3',
+    ],
+    
+    // Submit Button Click - Plays when submit button is clicked
+    submitClick: [
+        'submit.mp3'
+        // Add alternatives: 'submit2.mp3', 'send.mp3',
+    ],
+    
+    // Alert Popup - Plays when confirmation modal appears
+    alertPopup: [
+        'popup.mp3'
+        // Add alternatives: 'alert.mp3', 'notification.mp3',
+    ],
+    
+    // Loading Results - Plays during result calculation
+    loadingResults: [
+        'loading.mp3'
+        // Add alternatives: 'processing.mp3', 'calculating.mp3',
+    ],
+    
+    // Grade: Excellent (95-100%)
+    gradeExcellent: [
+        'excellent.mp3'
+        // Add alternatives: 'applause.mp3', 'celebration.mp3',
+    ],
+    
+    // Grade: Very Good (80-95%)
+    gradeVeryGood: [
+        'verygood.mp3'
+        // Add alternatives: 'success.mp3', 'achievement.mp3',
+    ],
+    
+    // Grade: Good (60-80%)
+    gradeGood: [
+        'good.mp3'
+        // Add alternatives: 'welldone.mp3', 'nice.mp3',
+    ],
+    
+    // Grade: Average (45-60%)
+    gradeAverage: [
+        'average.mp3'
+        // Add alternatives: 'okay.mp3', 'moderate.mp3',
+    ],
+    
+    // Grade: Below Average (30-45%)
+    gradeBelowAverage: [
+        'belowavg.mp3'
+        // Add alternatives: 'tryagain.mp3', 'practice.mp3',
+    ],
+    
+    // Grade: Poor (20-30%)
+    gradePoor: [
+        'poor.mp3'
+        // Add alternatives: 'ohno.mp3', 'studymore.mp3',
+    ],
+    
+    // Grade: Very Poor (5-20%)
+    gradeVeryPoor: [
+        'verypoor.mp3'
+        // Add alternatives: 'disappointed.mp3', 'needswork.mp3',
+    ],
+    
+    // Grade: Fail (< 5%)
+    gradeFail: [
+        'fail.mp3'
+        // Add alternatives: 'gameover.mp3', 'sadtrombone.mp3',
+    ]
+};
+
+// ====================================================================
 // Advanced Sound Manager with multiple scenarios and minimal latency
+// ====================================================================
 class SoundManager {
     constructor() {
-        // Sound file paths organized by scenario
+        // Build full paths from configuration
         this.soundPaths = {
-            optionSelect: [
-                'sounds/option-select/select1.mp3',
-                'sounds/option-select/select2.mp3'
-            ],
-            submitClick: ['sounds/submit-click/submit.mp3'],
-            alertPopup: ['sounds/alert-popup/popup.mp3'],
-            loadingResults: ['sounds/loading-results/loading.mp3'],
-            gradeExcellent: ['sounds/grade-excellent/excellent.mp3'],
-            gradeVeryGood: ['sounds/grade-verygood/verygood.mp3'],
-            gradeGood: ['sounds/grade-good/good.mp3'],
-            gradeAverage: ['sounds/grade-average/average.mp3'],
-            gradeBelowAverage: ['sounds/grade-belowaverage/belowavg.mp3'],
-            gradePoor: ['sounds/grade-poor/poor.mp3'],
-            gradeVeryPoor: ['sounds/grade-verypoor/verypoor.mp3'],
-            gradeFail: ['sounds/grade-fail/fail.mp3']
+            optionSelect: this.buildPaths('option-select', SOUND_FILES.optionSelect),
+            submitClick: this.buildPaths('submit-click', SOUND_FILES.submitClick),
+            alertPopup: this.buildPaths('alert-popup', SOUND_FILES.alertPopup),
+            loadingResults: this.buildPaths('loading-results', SOUND_FILES.loadingResults),
+            gradeExcellent: this.buildPaths('grade-excellent', SOUND_FILES.gradeExcellent),
+            gradeVeryGood: this.buildPaths('grade-verygood', SOUND_FILES.gradeVeryGood),
+            gradeGood: this.buildPaths('grade-good', SOUND_FILES.gradeGood),
+            gradeAverage: this.buildPaths('grade-average', SOUND_FILES.gradeAverage),
+            gradeBelowAverage: this.buildPaths('grade-belowaverage', SOUND_FILES.gradeBelowAverage),
+            gradePoor: this.buildPaths('grade-poor', SOUND_FILES.gradePoor),
+            gradeVeryPoor: this.buildPaths('grade-verypoor', SOUND_FILES.gradeVeryPoor),
+            gradeFail: this.buildPaths('grade-fail', SOUND_FILES.gradeFail)
         };
 
         // Pre-loaded audio pools for minimal latency
@@ -105,6 +188,11 @@ class SoundManager {
 
         this.currentlyPlaying = null;
         this.initializeSounds();
+    }
+
+    // Helper method to build full file paths
+    buildPaths(directory, filenames) {
+        return filenames.map(filename => `sounds/${directory}/${filename}`);
     }
 
     async initializeSounds() {
