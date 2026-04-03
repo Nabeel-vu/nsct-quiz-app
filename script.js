@@ -1,153 +1,68 @@
-// Sample quiz questions
+// Quiz Configuration
 const QUIZ_CONFIG = {
-    totalQuestions: 20,
-    timeLimit: 120 * 60,
+    totalQuestions: 100,
+    timeLimit: 120 * 60, // 120 minutes
     storageKey: 'nsct_quiz_history',
     quizProgressKey: 'nsct_quiz_progress'
 };
 
-const sampleQuestions = [
-    {
-        id: 1,
-        question: "What is the capital of India?",
-        options: ["Mumbai", "New Delhi", "Kolkata", "Chennai"],
-        correct: 1,
-        category: "Geography"
-    },
-    {
-        id: 2,
-        question: "Which planet is known as the Red Planet?",
-        options: ["Venus", "Mars", "Jupiter", "Saturn"],
-        correct: 1,
-        category: "Science"
-    },
-    {
-        id: 3,
-        question: "Who wrote 'Romeo and Juliet'?",
-        options: ["Charles Dickens", "William Shakespeare", "Jane Austen", "Mark Twain"],
-        correct: 1,
-        category: "Literature"
-    },
-    {
-        id: 4,
-        question: "What is 15 + 25?",
-        options: ["35", "40", "45", "50"],
-        correct: 1,
-        category: "Mathematics"
-    },
-    {
-        id: 5,
-        question: "Which gas do plants absorb from the atmosphere?",
-        options: ["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"],
-        correct: 1,
-        category: "Science"
-    },
-    {
-        id: 6,
-        question: "What is the largest ocean on Earth?",
-        options: ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"],
-        correct: 3,
-        category: "Geography"
-    },
-    {
-        id: 7,
-        question: "Who painted the Mona Lisa?",
-        options: ["Vincent van Gogh", "Pablo Picasso", "Leonardo da Vinci", "Michelangelo"],
-        correct: 2,
-        category: "Arts"
-    },
-    {
-        id: 8,
-        question: "What is the speed of light?",
-        options: ["300,000 km/s", "150,000 km/s", "450,000 km/s", "600,000 km/s"],
-        correct: 0,
-        category: "Physics"
-    },
-    {
-        id: 9,
-        question: "In which year did World War II end?",
-        options: ["1943", "1944", "1945", "1946"],
-        correct: 2,
-        category: "History"
-    },
-    {
-        id: 10,
-        question: "What is the chemical symbol for gold?",
-        options: ["Go", "Gd", "Au", "Ag"],
-        correct: 2,
-        category: "Chemistry"
-    },
-    {
-        id: 11,
-        question: "Which is the smallest prime number?",
-        options: ["0", "1", "2", "3"],
-        correct: 2,
-        category: "Mathematics"
-    },
-    {
-        id: 12,
-        question: "What is the capital of France?",
-        options: ["Berlin", "Madrid", "Paris", "Rome"],
-        correct: 2,
-        category: "Geography"
-    },
-    {
-        id: 13,
-        question: "Who discovered penicillin?",
-        options: ["Marie Curie", "Alexander Fleming", "Louis Pasteur", "Isaac Newton"],
-        correct: 1,
-        category: "Science"
-    },
-    {
-        id: 14,
-        question: "What is the largest mammal?",
-        options: ["African Elephant", "Blue Whale", "Giraffe", "Polar Bear"],
-        correct: 1,
-        category: "Biology"
-    },
-    {
-        id: 15,
-        question: "What is the square root of 144?",
-        options: ["10", "11", "12", "13"],
-        correct: 2,
-        category: "Mathematics"
-    },
-    {
-        id: 16,
-        question: "Which language is most spoken worldwide?",
-        options: ["English", "Mandarin Chinese", "Spanish", "Hindi"],
-        correct: 1,
-        category: "Language"
-    },
-    {
-        id: 17,
-        question: "What is the currency of Japan?",
-        options: ["Yuan", "Won", "Yen", "Ringgit"],
-        correct: 2,
-        category: "Economics"
-    },
-    {
-        id: 18,
-        question: "Who developed the theory of relativity?",
-        options: ["Isaac Newton", "Albert Einstein", "Galileo Galilei", "Stephen Hawking"],
-        correct: 1,
-        category: "Physics"
-    },
-    {
-        id: 19,
-        question: "What is the boiling point of water?",
-        options: ["90°C", "100°C", "110°C", "120°C"],
-        correct: 1,
-        category: "Chemistry"
-    },
-    {
-        id: 20,
-        question: "Which continent is the driest?",
-        options: ["Africa", "Australia", "Antarctica", "Asia"],
-        correct: 2,
-        category: "Geography"
+// Global variable to store loaded questions
+let categoryData = null;
+
+// Load questions from JSON file
+async function loadQuestions() {
+    try {
+        const response = await fetch('questions.json');
+        categoryData = await response.json();
+        console.log('Questions loaded successfully');
+        return categoryData;
+    } catch (error) {
+        console.error('Error loading questions:', error);
+        alert('Failed to load questions. Please refresh the page.');
+        throw error;
     }
-];
+}
+
+// Select weighted random questions
+function selectWeightedQuestions(categoryData, totalQuestions) {
+    const selectedQuestions = [];
+    const totalWeight = Object.values(categoryData).reduce((sum, cat) => sum + cat.weight, 0);
+    
+    // Calculate how many questions from each category based on weight
+    const categoryQuestionCounts = {};
+    let remaining = totalQuestions;
+    
+    Object.entries(categoryData).forEach(([category, data], index, array) => {
+        if (index === array.length - 1) {
+            categoryQuestionCounts[category] = remaining;
+        } else {
+            const count = Math.round((data.weight / totalWeight) * totalQuestions);
+            categoryQuestionCounts[category] = count;
+            remaining -= count;
+        }
+    });
+    
+    // Select random questions from each category
+    Object.entries(categoryQuestionCounts).forEach(([category, count]) => {
+        const questions = categoryData[category].questions;
+        const shuffled = [...questions].sort(() => Math.random() - 0.5);
+        const selected = shuffled.slice(0, Math.min(count, questions.length));
+        
+        selected.forEach((q, index) => {
+            selectedQuestions.push({
+                id: selectedQuestions.length + 1,
+                question: q.statement,
+                options: [q.option_a, q.option_b, q.option_c, q.option_d],
+                correct: ['option_a', 'option_b', 'option_c', 'option_d'].indexOf(q.correct_option),
+                category: category,
+                explanation: q.explanation
+            });
+        });
+    });
+    
+    // Shuffle final questions
+    return selectedQuestions.sort(() => Math.random() - 0.5);
+}
 
 // Sound Manager for playing random sounds
 class SoundManager {
@@ -197,7 +112,8 @@ let quizState = {
 };
 
 // Initialize app
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    await loadQuestions();
     setupEventListeners();
     loadStudentName();
 });
@@ -226,16 +142,21 @@ function loadStudentName() {
     }
 }
 
-function startQuiz() {
+async function startQuiz() {
     const name = document.getElementById('student-name').value.trim();
     if (!name) {
         alert('Please enter your name');
         return;
     }
 
+    if (!categoryData) {
+        alert('Questions are still loading. Please wait...');
+        return;
+    }
+
     localStorage.setItem('nsct_student_name', name);
     quizState.studentName = name;
-    quizState.questions = [...sampleQuestions];
+    quizState.questions = selectWeightedQuestions(categoryData, QUIZ_CONFIG.totalQuestions);
     quizState.answers = new Array(quizState.questions.length).fill(null);
     quizState.currentQuestionIndex = 0;
     quizState.visitedQuestions = new Set();
@@ -483,6 +404,13 @@ function displayResults(results) {
             `;
         });
 
+        const explanationHTML = question.explanation ? `
+            <div class="explanation">
+                <div class="explanation-label">Explanation:</div>
+                <div>${question.explanation}</div>
+            </div>
+        ` : '';
+
         questionDiv.innerHTML = `
             <div class="detailed-question-header">
                 <span class="detailed-question-number">Question ${index + 1} - ${question.category}</span>
@@ -490,6 +418,7 @@ function displayResults(results) {
             </div>
             <div class="detailed-question-text">${question.question}</div>
             <div class="detailed-options">${optionsHTML}</div>
+            ${explanationHTML}
         `;
 
         detailedContainer.appendChild(questionDiv);
