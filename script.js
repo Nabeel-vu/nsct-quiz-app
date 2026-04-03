@@ -73,7 +73,6 @@ function selectWeightedQuestions(categoryData, totalQuestions) {
 
 const SOUND_FILES = {
     // Option Selection - Randomly plays one of these when clicking options
-    // Add as many as you want for variety!
     optionSelect: [
         '1-p-e-w.mp3',
         'aayein-meme.mp3',
@@ -131,74 +130,136 @@ const SOUND_FILES = {
         'whoosh-sfx.mp3',
         'wrong-answer-sound-effect.mp3',
         'yooooooooooooooooooooooooo_4_objp8XX.mp3',
-        'yt1s_wU4BGgD.mp3'
+        'yt1s_wU4BGgD.mp3',
     ],
-    
+
     // Submit Button Click - Plays when submit button is clicked
     submitClick: [
-        'submit.mp3'
-        // Add alternatives: 'submit2.mp3', 'send.mp3',
+        'uwu-the-real-one.mp3',
     ],
-    
+
     // Alert Popup - Plays when confirmation modal appears
     alertPopup: [
-        'popup.mp3'
-        // Add alternatives: 'alert.mp3', 'notification.mp3',
+        'uwu-the-real-one.mp3',
     ],
-    
+
     // Loading Results - Plays during result calculation
     loadingResults: [
-        'loading.mp3'
-        // Add alternatives: 'processing.mp3', 'calculating.mp3',
+        'a-few-moments-later-sponge-bob-sfx-fun.mp3',
+        'ascending-to-heavens.mp3',
+        'chalo.mp3',
+        'dun-dun-dun-sound-effect-brass_8nFBccR.mp3',
     ],
-    
+
     // Grade: Excellent (95-100%)
     gradeExcellent: [
-        'excellent.mp3'
-        // Add alternatives: 'applause.mp3', 'celebration.mp3',
+        'excellent.mp3',
+        'hacker-hai-bhai-hacker-ajjubhai.mp3',
+        'montagem-tomada (1).mp3',
+        'montagem-tomada.mp3',
+        'moye-moye-sad-version.mp3',
+        'nya_2xyALFL.mp3',
+        'pubg-im-on-my-way.mp3',
+        'snapchat-95827741.mp3',
+        'systumm-faad-denge.mp3',
+        'technoloyia-technologia-tecnologia.mp3',
+        'white-tee-rizz_Pw3bPh4.mp3',
+        'women_U745zlE.mp3',
     ],
-    
+
     // Grade: Very Good (80-95%)
     gradeVeryGood: [
-        'verygood.mp3'
-        // Add alternatives: 'success.mp3', 'achievement.mp3',
+        '1-000-000-000-iq.mp3',
+        'abhi-maza-ayagga.mp3',
+        'aplausos_2.mp3',
+        'gta-san-andreas-_RZMwPB0.mp3',
+        'heavenly-music-gaming-sound-effect-hd-mp3cut.mp3',
+        'helicopter-helicopter-parakofer-parakofer.mp3',
+        'matlab-wo-alag-hi-level-ka-banda-tha.mp3',
+        'romanceeeeeeeeeeeeee.mp3',
+        'to-sacrifice-my-own-life-for-pakistan_zmmKliP.mp3',
     ],
-    
+
     // Grade: Good (60-80%)
     gradeGood: [
-        'good.mp3'
-        // Add alternatives: 'welldone.mp3', 'nice.mp3',
+        'donate-announcer-money-money-money_sNoHonr.mp3',
+        'fahh-song.mp3',
+        'the-king-is-back.mp3',
     ],
-    
+
     // Grade: Average (45-60%)
     gradeAverage: [
-        'average.mp3'
-        // Add alternatives: 'okay.mp3', 'moderate.mp3',
+        'anime-wow-sound-effect.mp3',
+        'inlove-romance.mp3',
+        'meme_lgkJmX6.mp3',
+        'modi-ji-wah.mp3',
+        'proper-patola-by-vj.mp3',
+        'rat-dance-music.mp3',
     ],
-    
+
     // Grade: Below Average (30-45%)
     gradeBelowAverage: [
-        'belowavg.mp3'
-        // Add alternatives: 'tryagain.mp3', 'practice.mp3',
+        'c-45-89.mp3',
+        'f-ck-this-sh-t-im-out_TfWyqAI.mp3',
+        'i-almost-died.mp3',
+        'soccer-song.mp3',
+        'the-lion-sleeps-tonight.mp3',
     ],
-    
+
     // Grade: Poor (20-30%)
     gradePoor: [
-        'poor.mp3'
-        // Add alternatives: 'ohno.mp3', 'studymore.mp3',
+        'chala-ja-bsdk.mp3',
+        'crocodildo_MCtAOqJ.mp3',
+        'dexter-is-watching-u.mp3',
+        'ehh-ehh-ehhhh.mp3',
+        'oh-no_sWahoAP.mp3',
+        'wah-wah-sound-effect.mp3',
     ],
-    
+
     // Grade: Very Poor (5-20%)
     gradeVeryPoor: [
-        'verypoor.mp3'
-        // Add alternatives: 'disappointed.mp3', 'needswork.mp3',
+        'cryingno.mp3',
+        'fbi-open-up_dwLhIFf.mp3',
+        'im-dying.mp3',
+        'sad-music.mp3',
+        'tum-dono-ki.mp3',
+        'tum-dum-tedau.mp3',
+        'wake-up-to-reality.mp3',
+        'weeeee_original_1193597514938524841.mp3',
+        'y2mate-mp3cut_sRzY6rh.mp3',
     ],
-    
+
     // Grade: Fail (< 5%)
     gradeFail: [
-        'fail.mp3'
-        // Add alternatives: 'gameover.mp3', 'sadtrombone.mp3',
-    ]
+        'ad.mp3',
+        'aisa-mat-karo.mp3',
+        'allahumme-yarab.mp3',
+        'ammi-bacha-la-re.mp3',
+        'among-us-role-reveal-sound.mp3',
+        'battleblocktheater-quip-mmmhmm_1.mp3',
+        'chicken-on-tree-screaming.mp3',
+        'crazy-indian-sound.mp3',
+        'dexter-meme.mp3',
+        'doston.mp3',
+        'emotional-damage-meme.mp3',
+        'family-dekhte-hain-nahi-to.mp3',
+        'gopgopgop.mp3',
+        'gta-v-death-sound-effect-102.mp3',
+        'khatam.mp3',
+        'ma-ka-bhosda-aag.mp3',
+        'meme-de-creditos-finales.mp3',
+        'plankton-oooooh.mp3',
+        'russian-kid-meme.mp3',
+        'saari-umar-main-joker.mp3',
+        'sad-meow-song.mp3',
+        'super-mario-death-sound-sound-effect.mp3',
+        'tf_nemesis.mp3',
+        'tmpauxfo4ff.mp3',
+        'umeed-ka-daman.mp3',
+        'whatsapp-audio-2021-01-04-at-12.mp3',
+        'y2mate_HOnnyD0.mp3',
+        'ye-meri-galti-h.mp3',
+    ],
 };
 
 // ====================================================================
