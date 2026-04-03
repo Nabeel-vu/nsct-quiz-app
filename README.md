@@ -31,9 +31,27 @@ An interactive quiz application for NSCT preparation with **2768 real questions*
 
 **Total: 2768 questions** - Each quiz randomly selects 100 questions based on category weights.
 
-## Sound Feature
+## Sound Feature 🔊
 
-When you select an answer option, a random sound effect will play from the `sounds/` folder. The sound adds an interactive feedback element to enhance user experience.
+The app includes an **advanced multi-scenario sound system** with minimal latency:
+
+### Sound Scenarios:
+
+1. **Option Selection** - Plays when clicking answer options
+2. **Submit Button** - Plays when clicking submit
+3. **Alert Popup** - Plays when confirmation modal appears
+4. **Loading Results** - Plays during result calculation with progress animation
+5. **Grade-Based Results** - Different sounds for different score ranges:
+   - 🏆 **Excellent** (95-100%)
+   - 🎉 **Very Good** (80-95%)
+   - 👍 **Good** (60-80%)
+   - 📊 **Average** (45-60%)
+   - 📉 **Below Average** (30-45%)
+   - ⚠️ **Poor** (20-30%)
+   - 😟 **Very Poor** (5-20%)
+   - ❌ **Fail** (< 5%)
+
+All sounds are pre-loaded for **< 10ms playback latency**. See [SOUND_GUIDE.md](SOUND_GUIDE.md) for detailed documentation.
 
 ## Project Structure
 
@@ -43,9 +61,20 @@ nsct/
 ├── style.css           # Styling and responsive design
 ├── script.js           # Quiz logic with sound manager
 ├── questions.json      # 2768 NSCT questions with explanations
-├── sounds/             # Folder containing sound effects
-│   ├── sound2.mp3
-│   └── sound3.mp3
+├── sounds/             # Multi-scenario sound system
+│   ├── option-select/      # Option click sounds (2 files)
+│   ├── submit-click/       # Submit button sound
+│   ├── alert-popup/        # Modal popup sound
+│   ├── loading-results/    # Loading animation sound
+│   ├── grade-excellent/    # 95-100% score sound
+│   ├── grade-verygood/     # 80-95% score sound
+│   ├── grade-good/         # 60-80% score sound
+│   ├── grade-average/      # 45-60% score sound
+│   ├── grade-belowaverage/ # 30-45% score sound
+│   ├── grade-poor/         # 20-30% score sound
+│   ├── grade-verypoor/     # 5-20% score sound
+│   └── grade-fail/         # <5% score sound
+├── SOUND_GUIDE.md      # Detailed sound system documentation
 └── README.md           # This file
 ```
 
@@ -124,8 +153,24 @@ const QUIZ_CONFIG = {
 
 ### Adding More Sounds
 
-1. Add `.mp3` files to the `sounds/` folder
-2. Update the `sounds` array in the `SoundManager` class in `script.js`
+Place sound files in appropriate directories under `sounds/`. See [SOUND_GUIDE.md](SOUND_GUIDE.md) for:
+- Directory structure and purpose
+- File format recommendations
+- Optimal file sizes and durations
+- Volume control
+- Free sound resources
+
+**Quick Example:**
+```bash
+# Add option selection sounds
+sounds/option-select/select3.mp3
+sounds/option-select/select4.mp3
+
+# Add custom grade sounds
+sounds/grade-excellent/celebration.mp3
+```
+
+The system automatically detects and uses all MP3 files in each directory.
 
 ## License
 

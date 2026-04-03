@@ -64,34 +64,176 @@ function selectWeightedQuestions(categoryData, totalQuestions) {
     return selectedQuestions.sort(() => Math.random() - 0.5);
 }
 
-// Sound Manager for playing random sounds
+// Advanced Sound Manager with multiple scenarios and minimal latency
 class SoundManager {
     constructor() {
-        this.sounds = [
-            'sounds/sound2.mp3',
-            'sounds/sound3.mp3'
-        ];
-        this.audioPool = [];
+        // Sound file paths organized by scenario
+        this.soundPaths = {
+            optionSelect: [
+                'sounds/option-select/select1.mp3',
+                'sounds/option-select/select2.mp3'
+            ],
+            submitClick: ['sounds/submit-click/submit.mp3'],
+            alertPopup: ['sounds/alert-popup/popup.mp3'],
+            loadingResults: ['sounds/loading-results/loading.mp3'],
+            gradeExcellent: ['sounds/grade-excellent/excellent.mp3'],
+            gradeVeryGood: ['sounds/grade-verygood/verygood.mp3'],
+            gradeGood: ['sounds/grade-good/good.mp3'],
+            gradeAverage: ['sounds/grade-average/average.mp3'],
+            gradeBelowAverage: ['sounds/grade-belowaverage/belowavg.mp3'],
+            gradePoor: ['sounds/grade-poor/poor.mp3'],
+            gradeVeryPoor: ['sounds/grade-verypoor/verypoor.mp3'],
+            gradeFail: ['sounds/grade-fail/fail.mp3']
+        };
+
+        // Pre-loaded audio pools for minimal latency
+        this.audioPools = {};
+        this.volumes = {
+            optionSelect: 0.3,
+            submitClick: 0.4,
+            alertPopup: 0.35,
+            loadingResults: 0.3,
+            gradeExcellent: 0.5,
+            gradeVeryGood: 0.45,
+            gradeGood: 0.4,
+            gradeAverage: 0.35,
+            gradeBelowAverage: 0.35,
+            gradePoor: 0.4,
+            gradeVeryPoor: 0.4,
+            gradeFail: 0.45
+        };
+
+        this.currentlyPlaying = null;
         this.initializeSounds();
     }
 
-    initializeSounds() {
-        // Pre-load audio files
-        this.sounds.forEach(src => {
-            const audio = new Audio(src);
-            audio.volume = 0.3; // Set volume to 30%
-            this.audioPool.push(audio);
-        });
+    async initializeSounds() {
+        // Pre-load all available sound files
+        for (const [scenario, paths] of Object.entries(this.soundPaths)) {
+            this.audioPools[scenario] = [];
+            
+            for (const path of paths) {
+                try {
+                    const audio = new Audio();
+                    audio.preload = 'auto';
+                    audio.volume = this.volumes[scenario] || 0.3;
+                    audio.src = path;
+                    
+                    // Pre-load by attempting to load metadata
+                    await new Promise((resolve) => {
+                        audio.addEventListener('canplaythrough', resolve, { once: true });
+                        audio.addEventListener('error', resolve, { once: true });
+                        audio.load();
+                        // Don't wait forever
+                        setTimeout(resolve, 1000);
+                    });
+                    
+                    this.audioPools[scenario].push(audio);
+                } catch (error) {
+                    console.log(`Could not load sound: ${path}`);
+                }
+            }
+        }
+        console.log('Sound Manager initialized with pre-loaded audio');
     }
 
-    playRandomSound() {
+    playSound(scenario, options = {}) {
+        const { stopCurrent = false, volume = null, onEnded = null } = options;
+
+        // Stop currently playing sound if requested
+        if (stopCurrent && this.currentlyPlaying) {
+            this.currentlyPlaying.pause();
+            this.currentlyPlaying.currentTime = 0;
+        }
+
+        const pool = this.audioPools[scenario];
+        if (!pool || pool.length === 0) {
+            console.log(`No sounds available for: ${scenario}`);
+            return null;
+        }
+
         try {
-            const randomIndex = Math.floor(Math.random() * this.sounds.length);
-            const audio = new Audio(this.sounds[randomIndex]);
-            audio.volume = 0.3;
-            audio.play().catch(err => console.log('Sound play failed:', err));
+            // Select random sound from pool
+            const randomIndex = Math.floor(Math.random() * pool.length);
+            const audio = pool[randomIndex].cloneNode();
+            
+            // Set volume
+            audio.volume = volume !== null ? volume : this.volumes[scenario];
+            
+            // Reset to start
+            audio.currentTime = 0;
+            
+            // Handle ended event
+            if (onEnded) {
+                audio.addEventListener('ended', onEnded, { once: true });
+            }
+            
+            // Play with promise handling
+            const playPromise = audio.play();
+            
+            if (playPromise !== undefined) {
+                playPromise
+                    .then(() => {
+                        this.currentlyPlaying = audio;
+                    })
+                    .catch(err => {
+                        console.log(`Playback failed for ${scenario}:`, err.message);
+                    });
+            }
+            
+            return audio;
         } catch (error) {
-            console.log('Sound error:', error);
+            console.log(`Error playing sound for ${scenario}:`, error);
+            return null;
+        }
+    }
+
+    // Convenience methods for different scenarios
+    playOptionSelect() {
+        return this.playSound('optionSelect');
+    }
+
+    playSubmitClick() {
+        return this.playSound('submitClick');
+    }
+
+    playAlertPopup() {
+        return this.playSound('alertPopup');
+    }
+
+    playLoadingResults(onEnded) {
+        return this.playSound('loadingResults', { onEnded });
+    }
+
+    playGradeSound(percentage) {
+        let scenario;
+        
+        if (percentage >= 95) {
+            scenario = 'gradeExcellent';
+        } else if (percentage >= 80) {
+            scenario = 'gradeVeryGood';
+        } else if (percentage >= 60) {
+            scenario = 'gradeGood';
+        } else if (percentage >= 45) {
+            scenario = 'gradeAverage';
+        } else if (percentage >= 30) {
+            scenario = 'gradeBelowAverage';
+        } else if (percentage >= 20) {
+            scenario = 'gradePoor';
+        } else if (percentage >= 5) {
+            scenario = 'gradeVeryPoor';
+        } else {
+            scenario = 'gradeFail';
+        }
+        
+        return this.playSound(scenario, { stopCurrent: true });
+    }
+
+    stopAll() {
+        if (this.currentlyPlaying) {
+            this.currentlyPlaying.pause();
+            this.currentlyPlaying.currentTime = 0;
+            this.currentlyPlaying = null;
         }
     }
 }
@@ -127,7 +269,11 @@ function setupEventListeners() {
         clearQuizProgress();
         showPage('landing-page');
     });
-    document.getElementById('submit-quiz-btn').addEventListener('click', () => showConfirmModal());
+    document.getElementById('submit-quiz-btn').addEventListener('click', () => {
+        // Play submit click sound
+        soundManager.playSubmitClick();
+        showConfirmModal();
+    });
     document.getElementById('confirm-submit').addEventListener('click', confirmSubmit);
     document.getElementById('cancel-submit').addEventListener('click', hideConfirmModal);
     document.getElementById('prev-btn').addEventListener('click', () => navigateQuestion(-1));
@@ -238,8 +384,8 @@ function renderQuestion() {
 function selectOption(optionIndex) {
     quizState.answers[quizState.currentQuestionIndex] = optionIndex;
     
-    // Play random sound on option selection
-    soundManager.playRandomSound();
+    // Play option selection sound
+    soundManager.playOptionSelect();
     
     renderQuestion();
     saveQuizProgress();
@@ -305,6 +451,9 @@ function showConfirmModal() {
     
     document.getElementById('modal-message').textContent = message;
     document.getElementById('confirm-modal').classList.add('active');
+    
+    // Play alert popup sound
+    soundManager.playAlertPopup();
 }
 
 function hideConfirmModal() {
@@ -312,8 +461,13 @@ function hideConfirmModal() {
 }
 
 function confirmSubmit() {
+    // Play submit click sound
+    soundManager.playSubmitClick();
+    
     hideConfirmModal();
-    submitQuiz();
+    
+    // Show loading screen
+    showLoadingScreen();
 }
 
 function autoSubmit() {
@@ -325,6 +479,10 @@ function submitQuiz() {
     clearQuizProgress();
     const results = calculateResults();
     saveToHistory(results);
+    
+    // Play grade-based sound
+    soundManager.playGradeSound(results.percentage);
+    
     displayResults(results);
 }
 
@@ -493,6 +651,53 @@ function clearQuizProgress() {
 
 function downloadPDF() {
     window.print();
+}
+
+// Loading screen functionality
+function showLoadingScreen() {
+    const loadingHTML = `
+        <div id="loading-screen" class="loading-screen active">
+            <div class="loading-content">
+                <div class="loading-spinner"></div>
+                <h2>Calculating Results...</h2>
+                <p>Please wait while we evaluate your answers</p>
+                <div class="loading-progress">
+                    <div class="loading-bar" id="loading-bar"></div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', loadingHTML);
+    
+    // Play loading sound and start animation
+    soundManager.playLoadingResults(() => {
+        console.log('Loading sound completed');
+    });
+    
+    // Animate progress bar
+    const loadingBar = document.getElementById('loading-bar');
+    let progress = 0;
+    const interval = setInterval(() => {
+        progress += Math.random() * 15;
+        if (progress >= 100) {
+            progress = 100;
+            clearInterval(interval);
+            setTimeout(() => {
+                hideLoadingScreen();
+                submitQuiz();
+            }, 300);
+        }
+        loadingBar.style.width = progress + '%';
+    }, 150);
+}
+
+function hideLoadingScreen() {
+    const loadingScreen = document.getElementById('loading-screen');
+    if (loadingScreen) {
+        loadingScreen.classList.remove('active');
+        setTimeout(() => loadingScreen.remove(), 300);
+    }
 }
 
 // Handle page visibility for timer
