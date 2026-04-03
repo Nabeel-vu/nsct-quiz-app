@@ -301,7 +301,11 @@ class SoundManager {
         };
 
         this.currentlyPlaying = null;
-        this.initializeSounds();
+        this.loadedScenarios = new Set(); // Track loaded scenarios
+        this.loadingScenarios = new Set(); // Track currently loading scenarios
+        
+        // LAZY LOADING: Sounds load on-demand, not on page load
+        console.log('🔊 Sound Manager ready (lazy loading enabled)');
     }
 
     // Helper method to build full file paths
@@ -309,34 +313,85 @@ class SoundManager {
         return filenames.map(filename => `sounds/${directory}/${filename}`);
     }
 
-    async initializeSounds() {
-        // Pre-load all available sound files
-        for (const [scenario, paths] of Object.entries(this.soundPaths)) {
-            this.audioPools[scenario] = [];
-            
-            for (const path of paths) {
-                try {
-                    const audio = new Audio();
-                    audio.preload = 'auto';
-                    audio.volume = this.volumes[scenario] || 0.3;
-                    audio.src = path;
-                    
-                    // Pre-load by attempting to load metadata
-                    await new Promise((resolve) => {
-                        audio.addEventListener('canplaythrough', resolve, { once: true });
-                        audio.addEventListener('error', resolve, { once: true });
-                        audio.load();
-                        // Don't wait forever
-                        setTimeout(resolve, 1000);
-                    });
-                    
-                    this.audioPools[scenario].push(audio);
-                } catch (error) {
-                    console.log(`Could not load sound: ${path}`);
-                }
+    // Load sounds for specific scenarios (lazy loading)
+    async loadScenarios(scenarios) {
+        const loadPromises = scenarios
+            .filter(scenario => !this.loadedScenarios.has(scenario))
+            .map(scenario => this.loadScenario(scenario));
+        
+        if (loadPromises.length > 0) {
+            await Promise.all(loadPromises);
+        }
+    }
+
+    async loadScenario(scenario) {
+        // Skip if already loaded or loading
+        if (this.loadedScenarios.has(scenario) || this.loadingScenarios.has(scenario)) {
+            return;
+        }
+
+        this.loadingScenarios.add(scenario);
+        console.log(`🔊 Loading sounds: ${scenario}...`);
+
+        const paths = this.soundPaths[scenario];
+        if (!paths || paths.length === 0) {
+            this.loadingScenarios.delete(scenario);
+            return;
+        }
+
+        this.audioPools[scenario] = [];
+
+        for (const path of paths) {
+            try {
+                const audio = new Audio();
+                audio.preload = 'auto';
+                audio.volume = this.volumes[scenario] || 0.3;
+                audio.src = path;
+
+                // Pre-load by attempting to load metadata
+                await new Promise((resolve) => {
+                    audio.addEventListener('canplaythrough', resolve, { once: true });
+                    audio.addEventListener('error', resolve, { once: true });
+                    audio.load();
+                    // Don't wait forever
+                    setTimeout(resolve, 1000);
+                });
+
+                this.audioPools[scenario].push(audio);
+            } catch (error) {
+                console.log(`Could not load sound: ${path}`);
             }
         }
-        console.log('Sound Manager initialized with pre-loaded audio');
+
+        this.loadedScenarios.add(scenario);
+        this.loadingScenarios.delete(scenario);
+        console.log(`✅ Loaded ${this.audioPools[scenario].length} sounds for ${scenario}`);
+    }
+
+    // Pre-load quiz sounds when user starts quiz
+    async preloadQuizSounds() {
+        console.log('🎯 Pre-loading quiz sounds...');
+        await this.loadScenarios(['optionSelect', 'submitClick', 'alertPopup']);
+        console.log('✅ Quiz sounds ready!');
+    }
+
+    // Load grade sounds based on score
+    async loadGradeSounds(percentage) {
+        let gradeScenario;
+        
+        if (percentage >= 95) gradeScenario = 'gradeExcellent';
+        else if (percentage >= 80) gradeScenario = 'gradeVeryGood';
+        else if (percentage >= 60) gradeScenario = 'gradeGood';
+        else if (percentage >= 45) gradeScenario = 'gradeAverage';
+        else if (percentage >= 30) gradeScenario = 'gradeBelowAverage';
+        else if (percentage >= 20) gradeScenario = 'gradePoor';
+        else if (percentage >= 5) gradeScenario = 'gradeVeryPoor';
+        else gradeScenario = 'gradeFail';
+
+        console.log(`🎯 Loading grade sounds for ${percentage}%: ${gradeScenario}`);
+        await this.loadScenarios(['loadingResults', gradeScenario]);
+        
+        return gradeScenario;
     }
 
     playSound(scenario, options = {}) {
@@ -511,6 +566,11 @@ async function startQuiz() {
     quizState.timeRemaining = QUIZ_CONFIG.timeLimit;
     quizState.quizStartTime = Date.now();
 
+    // 🔊 Pre-load quiz sounds when quiz starts (lazy loading)
+    soundManager.preloadQuizSounds().catch(err => 
+        console.log('Sound preload failed (non-critical):', err)
+    );
+
     showPage('quiz-page');
     renderQuestionIndex();
     renderQuestion();
@@ -676,11 +736,14 @@ function autoSubmit() {
     submitQuiz();
 }
 
-function submitQuiz() {
+async function submitQuiz() {
     clearInterval(quizState.timerInterval);
     clearQuizProgress();
     const results = calculateResults();
     saveToHistory(results);
+    
+    // 🔊 Load grade-appropriate sounds before showing results
+    await soundManager.loadGradeSounds(results.percentage);
     
     // Play grade-based sound
     soundManager.playGradeSound(results.percentage);
